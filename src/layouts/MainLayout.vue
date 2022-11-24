@@ -37,7 +37,7 @@
             </div>
           </q-menu>
         </q-btn>
-        
+
       </q-toolbar>
     </q-header>
 
@@ -64,7 +64,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <common-dialog 
+    <common-dialog
       v-model="showDialogEditUser"
       title="Edit Profile"
       @onClickSave="editInfoUser"
@@ -90,6 +90,11 @@ import { apiRequest } from 'src/services/apiRequest';
 
 const essentialLinks = [
   {
+    title: 'Dashboard ',
+    icon: 'home',
+    route: 'Index'
+  },
+  {
     title: 'Members ',
     icon: 'person',
     route: 'MemberIndex'
@@ -108,6 +113,11 @@ const essentialLinks = [
     title: 'Comment',
     icon: 'feedback',
     route: 'CommentIndex'
+  },
+  {
+    title: 'Notification',
+    icon: 'notifications_active',
+    route: 'NotificationIndex'
   },
 
 ];

@@ -1,12 +1,12 @@
 <template>
   <div class="row justify-center login">
-    <q-card class="col-5">
+    <q-card class="col-10 col-sm-6 col-md-4">
       <q-card-section>
         <div class="text-h4 text-center">Login</div>
       </q-card-section>
       <q-card-section>
         <q-form @submit="onSubmit">
-          <q-card-section class="col-12 col-sm-10">
+          <q-card-section class="col-12">
             <q-input
               v-model="user.username"
               type="text"

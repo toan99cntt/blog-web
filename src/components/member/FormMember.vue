@@ -3,10 +3,10 @@
     filled
     v-model="user.name"
     label="Name"
-    :error="!!errors.name"
+    :error="!!errors._name"
   >
     <template v-slot:error>
-      {{errors.name[0]}}
+      {{errors._name[0]}}
     </template>
   </q-input>
 
@@ -14,10 +14,10 @@
     filled
     v-model="user.email"
     label="Email"
-    :error="!!errors.email"
+    :error="!!errors._email"
   >
     <template v-slot:error>
-      {{errors.email[0]}}
+      {{errors._email[0]}}
     </template>
   </q-input>
 
@@ -26,7 +26,7 @@
     v-model="user.password"
     :type="isPassword ? 'password' : 'text'"
     label="Password"
-    :error="!!errors.password"
+    :error="!!errors._password"
   >
     <template v-slot:append>
       <q-icon
@@ -37,7 +37,7 @@
       />
     </template>
     <template v-slot:error>
-      {{errors.password[0]}}
+      {{errors._password[0]}}
     </template>
   </q-input>
 
@@ -46,19 +46,20 @@
     <q-radio v-model="user.gender" :val="0" label="Female"/>
     <q-radio v-model="user.gender" :val="1" label="Male"/>
   </div>
+  <span class="error-gender" v-if="!!errors._gender">{{errors._gender[0]}}</span>
 
   <q-input
-    filled  
+    filled
     v-model="user.phone_number"
     label="Phone"
     :error="!!errors.password"
   >
     <template v-slot:error>
-      {{errors.password[0]}}
+      {{errors._phone_number[0]}}
     </template>
   </q-input>
 
-  <q-input filled v-model="user.dob" label="Dob" readonly :error="!!errors.dob">
+  <q-input filled v-model="user.dob" label="Dob" readonly :error="!!errors._dob">
     <template v-slot:append>
       <q-icon name="event" class="cursor-pointer">
         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -71,15 +72,16 @@
       </q-icon>
     </template>
     <template v-slot:error>
-      {{errors.dob[0]}}
+      {{errors._dob[0]}}
     </template>
   </q-input>
 
-  <div class="q-mt-none">
+  <!-- <div class="q-mt-none">
     <label for="">Status: </label>
     <q-radio v-model="user.status" :val="0" label="Block" />
     <q-radio v-model="user.status" :val="1" label="Activate"/>
-  </div>
+  </div> -->
+
 </template>
 
 <script setup lang="ts">
@@ -104,3 +106,11 @@
           set: value => emit('update:modelValue', value)
         });
 </script>
+
+<style scoped>
+.error-gender {
+  color: #c10015;
+  font-size: 12px;
+  padding-left: 10px;
+}
+</style>

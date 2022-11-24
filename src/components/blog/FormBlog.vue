@@ -3,10 +3,10 @@
     filled
     v-model="blog.title"
     label="Title"
-    :error="!!errors.title"
+    :error="!!errors._title"
   >
     <template v-slot:error>
-      {{errors.title[0]}}
+      {{errors._title[0]}}
     </template>
   </q-input>
 
@@ -15,13 +15,13 @@
     v-model="blog.content"
     label="Content"
     type="textarea"
-    :error="!!errors.content"
+    :error="!!errors._content"
   >
     <template v-slot:error>
-      {{errors.content[0]}}
+      {{errors._content[0]}}
     </template>
   </q-input>
-  
+
   <div class="q-mt-none">
     <q-radio v-model="blog.status" :val="0" label="Block" />
     <q-radio v-model="blog.status" :val="1" label="Activate"/>

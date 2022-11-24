@@ -5,13 +5,23 @@
       :rows="rows"
       :columns="columns"
       row-key="name"
+      :filter="filter"
       :pagination.sync="{rowsPerPage: 15}"
       @row-click="openDialogEdit"
     >
-      <template v-slot:top>
-        <div class="q-table__title q-mr-md">Members</div>
+    <template v-slot:top>
+      <div class="col-6">
+        <span class="q-table__title q-mr-md">Members</span>
         <q-btn label="New" no-caps color="positive" icon="add" @click="showDialogAdd = !showDialogAdd"></q-btn>
-      </template>
+      </div>
+      <div class="col-6" style="text-align: -webkit-right;">
+        <q-input borderless dense debounce="300" v-model="filter" placeholder="Search" style="max-width: 200px">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </div>
+    </template>
       <template v-slot:body-cell-stt="scope">
         <td class="text-center">{{ scope.rowIndex + 1 }}</td>
       </template>
@@ -23,10 +33,10 @@
       :showBtnDelete="true"
       @onClickDelete="onDelete"
       @onClickSave="onSubmitEdit"
-    > 
+    >
       <template v-slot:content>
         <q-avatar size="100px" @click="imageRef.pickFiles()" class="cursor-pointer q-mb-md">
-          <img v-if="!!Object.values(user.avatar)[0] || !!urlImage" :src="urlImage || Object.values(user.avatar)[0].original_url"/>
+          <img v-if="!!Object.values(user.avatar)[0] || !!urlImage" :src="urlImage || Object.values(user.avatar)[0].url"/>
           <img v-else src="../../assets/images/avatar.svg"/>
         </q-avatar>
         <q-file
@@ -44,10 +54,10 @@
       v-model="showDialogAdd"
       title="New member"
       @onClickSave="onSubmitNew"
-    > 
+    >
       <template v-slot:content>
         <q-avatar size="100px" @click="imageRef.pickFiles()" class="cursor-pointer q-mb-md">
-          <img v-if="!!urlImage" :src="urlImage || user.avatar"/>
+          <img v-if="!!urlImage" :src="urlImage"/>
           <img v-else src="../../assets/images/avatar.svg"/>
         </q-avatar>
         <q-file
@@ -64,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-  import {ref, onMounted, watch, Ref} from 'vue'
+  import {ref, onMounted, watch, Ref, computed} from 'vue'
   import { apiRequest } from 'src/services/apiRequest';
   import { User } from 'src/models/user';
   import CommonDialog from 'src/components/CommonDialog.vue'
@@ -77,7 +87,7 @@
     { name: 'stt', align: 'center', label: 'STT', field: 'stt' },
     { name: 'email', label: 'Email', field: 'email', align: 'center' },
     { name: 'name', label: 'Name', field: 'name', align: 'center' },
-    { name: 'phone_number', label: 'Phone', field: 'phone_number', align: 'center' },
+    { name: 'created_at', label: 'Created', field: 'created_at', align: 'center' },
     { name: 'status', label: 'Status', align: 'center', field: (row: User) => row.status ? 'Activate' : 'Block' }
   ]
   const rows = ref([] as User[]);
@@ -86,6 +96,7 @@
   const user = ref({} as User);
   const errors = ref({})
   const urlImage = ref('')
+  const filter = ref('')
   const image: Ref<File|null> = ref(null);
   const imageRef = ref<QUploader>();
 
@@ -110,9 +121,9 @@
   }
 
   async function onSubmitNew() {
+    errors.value = {};
     try {
-      if(!!image.value) user.value.avatar = image.value;
-      const res = await apiRequest('api/members', 'post', buildFormData(user.value), true);
+      const res = await apiRequest('api/members', 'post', buildFormData(dataMember.value), true);
       if(res.status === 200) {
         await fetchData();
         pushNotify('success', 'Add member success!')
@@ -129,18 +140,8 @@
 
   async function onSubmitEdit() {
     try {
-      if(!!image.value) user.value.avatar = image.value;
-
-      const data = {
-        name: user.value.name,
-        email: user.value.email,
-        password: user.value.password,
-        phone_number: user.value.phone_number,
-        dob: user.value.dob,
-        avatar: image.value
-      }
-      
-      const res = await apiRequest(`api/members/${user.value.id}`, 'post', buildFormData(data), true);
+      errors.value = {};
+      const res = await apiRequest(`api/members/${user.value.id}`, 'post', buildFormData(dataMember.value), true);
       if(res.status === 200) {
         await fetchData();
         pushNotify('success', 'Edit member success!')
@@ -161,7 +162,7 @@
       if(res.status === 200) {
         await fetchData();
         pushNotify('success', 'Delete member success!')
-        showDialogEdit.value = false;                           
+        showDialogEdit.value = false;
       } else {
         pushNotify('danger', 'Delete member fail!')
       }
@@ -169,6 +170,20 @@
       //
     }
   }
+
+  const dataMember = computed(() => {
+    const data = {
+      _name: user.value.name,
+      _email: user.value.email,
+      _password: user.value.password,
+      _phone_number: user.value.phone_number,
+      _dob: user.value.dob,
+      _gender: user.value.gender == 0 ? "0" : "1",
+      _avatar: !!image.value ? image.value : null
+    }
+    if(!data._password) delete data._password;
+    return data;
+  })
 
   watch(() => showDialogAdd.value, (val)=> {
     user.value = {} as User;

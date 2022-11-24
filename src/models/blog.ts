@@ -9,4 +9,8 @@ export interface Blog {
   created_at: string,
   member: User,
   status: number
+  _image: File|null,
+  _title: string,
+  _content: string,
+  image: { url: string}[]
 }
