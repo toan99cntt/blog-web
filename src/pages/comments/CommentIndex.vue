@@ -5,8 +5,21 @@
       :rows="rows"
       :columns="columns"
       row-key="name"
+      :filter="filter"
       :pagination.sync="{rowsPerPage: 15}"
     >
+      <template v-slot:top>
+        <div class="col-6">
+          <span class="q-table__title q-mr-md">Comments</span>
+        </div>
+        <div class="col-6" style="text-align: -webkit-right;">
+          <q-input borderless dense debounce="300" v-model="filter" placeholder="Search" style="max-width: 200px">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+      </template>
       <template v-slot:body-cell-stt="scope">
         <td class="text-center">{{ scope.rowIndex + 1 }}</td>
       </template>
@@ -15,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-  import {ref, onMounted, watch} from 'vue'
+  import {ref, onMounted} from 'vue'
   import { apiRequest } from 'src/services/apiRequest';
   import { Comment } from 'src/models/comment';
 
@@ -28,6 +41,7 @@
     { name: 'created_at', label: 'Created at', field: 'created_at', align: 'center' },
   ]
   const rows = ref([] as Comment[]);
+  const filter = ref('')
 
   async function fetchData() {
     try {

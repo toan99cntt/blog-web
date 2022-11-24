@@ -7,5 +7,12 @@ export interface User {
   password: string,
   status: number,
   gender: number,
-  avatar: string | File
+  avatar: {url: string}[]
+  _name: string,
+  _email: string,
+  _phone_number: string,
+  _dob: string,
+  _password: string,
+  _gender: number,
+  _avatar: File|null
 }

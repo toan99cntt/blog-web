@@ -10,7 +10,8 @@ const routes: RouteRecordRaw[] = [
       {path: '/member',name: 'MemberIndex', component: () => import('pages/members/MemberIndex.vue') },
       {path: '/blog',name: 'BlogIndex', component: () => import('pages/blogs/BlogIndex.vue') },
       {path: '/message',name: 'MessageIndex', component: () => import('pages/messages/MessageIndex.vue') },
-      {path: '/comment',name: 'CommentIndex', component: () => import('pages/comments/CommentIndex.vue') }
+      {path: '/comment',name: 'CommentIndex', component: () => import('pages/comments/CommentIndex.vue') },
+      {path: '/notifications',name: 'NotificationIndex', component: () => import('pages/notifications/NotificationIndex.vue') }
     ],
       meta: { auth: true },
   },

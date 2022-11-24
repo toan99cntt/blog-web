@@ -1,12 +1,11 @@
+import { Blog } from './blog';
 import { User } from 'src/models/user';
 
-export interface Message {
+export interface Notification {
   id: number,
   content: string,
-  type: string,
   sender: User,
   receiver: User,
-  attachments: {url: string}[],
+  member_id: User,
   created_at: string,
-  has_seen: number
 }
